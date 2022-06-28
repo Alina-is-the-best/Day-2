@@ -1,0 +1,20 @@
+import serial # подключение библиотек
+import time
+run = True  # создание переменных
+t_old = 0
+try:
+    ser = serial.Serial('COM6', 9600) # подключение порта
+except Exception:    # создание исключения
+    print('Отпал провод')   
+    run = 0
+while run:
+    try:
+        f=int(ser.readline().decode('utf-8').strip()) # получение данных с ардуино
+        if f>=200 and time.time()-t_old>0.5:
+            print(60//(time.time()-t_old)) # вывод частоты в стандартный поток
+            t_old=time.time()       
+
+    except: # создание исключений
+        print('не удалось декодировать файлы')
+        run = False
+        ser.close() # закрытие порта
